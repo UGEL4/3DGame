@@ -28,14 +28,14 @@ void FollowActor::ActorInput(const uint8_t* keys)
 	{
 		forwardSpeed -= 400.0f;
 	}
-	if (keys[SDL_SCANCODE_A])
+	/*if (keys[SDL_SCANCODE_A])
 	{
 		angularSpeed -= Math::Pi;
 	}
 	if (keys[SDL_SCANCODE_D])
 	{
 		angularSpeed += Math::Pi;
-	}
+	}*/
 	if (keys[SDL_SCANCODE_UP])
 	{
 		mCamera->SetHorzDist(mCamera->GetHorzDist() - 10);
@@ -44,14 +44,33 @@ void FollowActor::ActorInput(const uint8_t* keys)
 	{ 
 		mCamera->SetHorzDist(mCamera->GetHorzDist() + 10);
 	}
-	if (keys[SDL_SCANCODE_Q])
+	/*if (keys[SDL_SCANCODE_Q])
 	{
 		mCamera->SetVertDist(mCamera->GetVertDist() - 10);
 	}
 	if (keys[SDL_SCANCODE_E])
 	{
 		mCamera->SetVertDist(mCamera->GetVertDist() + 10);
+	}*/
+
+	int x, y;
+	Uint32 buttons = SDL_GetRelativeMouseState(&x, &y);
+	const int maxMouseSpeed = 500;
+	const float maxAngularSpeed = Math::Pi * 8.0f;
+	if (x != 0)
+	{
+		angularSpeed = static_cast<float>(x) / maxMouseSpeed;
+		angularSpeed *= maxAngularSpeed;
 	}
+	float speed = 0;
+	if (y != 0)
+	{
+		speed = static_cast<float>(y) / maxMouseSpeed;
+		speed *= maxAngularSpeed * 5.f;
+	}
+
+	mCamera->SetVertDist(mCamera->GetVertDist() + speed);
+
 	mMoveComp->SetForwardSpeed(forwardSpeed);
 	mMoveComp->SetAngularSpeed(angularSpeed);
 
